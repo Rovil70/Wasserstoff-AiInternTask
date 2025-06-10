@@ -1,5 +1,5 @@
 streamlit
-openai
+groq
 langchain
 faiss-cpu
 sentence-transformers
