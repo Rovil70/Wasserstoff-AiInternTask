@@ -11,12 +11,14 @@ An AI-powered document chatbot that supports 75+ PDF/Image/Text files, extracts 
 - FAISS-based vector search
 
 ## 🚀 Tech Stack
-- Python, Streamlit
-- OpenAI (GPT-3.5-turbo)
-- SentenceTransformers
-- FAISS for vector search
-- Tesseract OCR
-- Langchain (optional)
+- **Python** & **Streamlit** – frontend and backend logic
+- **Groq API** – using **LLaMA3-70B-8192** model for summarization and question answering
+- **SentenceTransformers** – for generating text embeddings (`all-MiniLM-L6-v2`)
+- **FAISS** – for semantic vector search
+- **Tesseract OCR** – for scanned document text extraction
+- **pdf2image** & **PyPDF2** – for handling PDF files (scanned + digital)
+- **LangChain (optional)** – for abstraction (not critical in this project)
+- **Render** – for deployment of full app
 
 ## 📁 Project Structure
 📦 AiInternTask
