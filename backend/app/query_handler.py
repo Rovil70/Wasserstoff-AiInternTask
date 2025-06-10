@@ -3,48 +3,82 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from .vector_store import search_similar_docs
+from backend.app.vector_store import search_similar_docs
 from groq import Groq
 import os
 
-# Use Groq client (no billing needed)
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Set Groq API Key
+api_key = os.getenv("GROQ_API_KEY") 
+client = Groq(api_key=api_key)
 
+def ask_question_from_docs(query):
+    docs = search_similar_docs(query, top_k=5)
+    combined_context = ""
+    for doc_id, text in docs:
+        if len(text) > 1500:
+            text = text[:1500]
+        combined_context += f"Document ID: {doc_id}\n{text}\n\n"
 
-def format_context_for_prompt(results, max_characters=8000):
-    formatted = ""
-    total_chars = 0
-
-    for i, (doc_id, text) in enumerate(results):
-        if total_chars + len(text) > max_characters:
-            break
-        snippet = f"[{i+1}] Document: {doc_id}\n{text}\n\n"
-        formatted += snippet
-        total_chars += len(snippet)
-
-    return formatted
-
-def ask_question_from_docs(user_query):
-    # Step 1: Search similar docs
-    top_docs = search_similar_docs(user_query, top_k=5)
-    context = format_context_for_prompt(top_docs)
-
-    # Step 2: Groq prompt to LLaMA 3
     prompt = f"""
-You are an AI assistant helping users find accurate information from uploaded documents.
+You are a helpful assistant. Based on the below documents, answer the user's query.
 
-Context:
-{context}
+Query: {query}
 
-Question: {user_query}
+Documents:
+{combined_context}
 
-Answer concisely using the above context only. Also mention which documents the answers were found in.
+Give a concise answer.
 """
 
     response = client.chat.completions.create(
         model="llama3-70b-8192",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.4,
+        temperature=0.3
     )
-
     return response.choices[0].message.content
+
+
+def get_doc_level_answers(query):
+    docs = search_similar_docs(query, top_k=5)
+    results = []
+
+    for doc_id, text in docs:
+        if len(text) > 1500:
+            text = text[:1500]
+
+        prompt = f"""
+You are a legal document analysis assistant. Extract a short and clear answer to the following question based only on this document.
+
+Document ID: {doc_id}
+Content:
+{text}
+
+Question: {query}
+
+Answer in 1-2 lines. Also mention page and paragraph number if detectable. Format output as:
+
+Answer: ...
+Citation: Page X, Para Y
+"""
+
+        response = client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3
+        )
+
+        content = response.choices[0].message.content
+        try:
+            answer_part = content.split("Answer:")[1].split("Citation:")[0].strip()
+            citation_part = content.split("Citation:")[1].strip()
+        except:
+            answer_part = content.strip()
+            citation_part = "Not detected"
+
+        results.append({
+            "Document ID": doc_id,
+            "Extracted Answer": answer_part,
+            "Citation": citation_part
+        })
+
+    return results
