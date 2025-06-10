@@ -1,0 +1,12 @@
+streamlit
+openai
+langchain
+faiss-cpu
+sentence-transformers
+pytesseract
+pdf2image
+pypdf
+python-docx
+Pillow
+tqdm
+chromadb
