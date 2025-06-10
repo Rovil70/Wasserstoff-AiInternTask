@@ -5,7 +5,7 @@ faiss-cpu
 sentence-transformers
 pytesseract
 pdf2image
-pypdf
+PyPDF2
 python-docx
 Pillow
 tqdm
