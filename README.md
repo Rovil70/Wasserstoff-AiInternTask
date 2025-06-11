@@ -2,13 +2,16 @@
 
 An AI-powered document chatbot that supports 75+ PDF/Image/Text files, extracts context-aware answers, and generates theme-based summaries.
 
-## 📌 Features
-- Upload scanned PDFs/images or text documents
-- OCR-based text extraction
-- Query answering with doc-level citation (DocID, Page, Para)
-- Theme-based summarization from multiple docs
-- Clean Streamlit UI
-- FAISS-based vector search
+## Demo Link (Hugging Face)
+🔗 https://huggingface.co/spaces/Rovil70/wasserstoff-genai-chatbot
+
+## Features
+- Upload and process 75+ documents (PDF/Image/Text)
+- Natural language question answering with document citations
+- Summarized themes across multiple docs
+- OCR support via Tesseract
+- Streamlit-based frontend, FAISS-backed vector store
+- Deployed on Hugging Face + public GitHub repo
 
 ## 🚀 Tech Stack
 - **Python** & **Streamlit** – frontend and backend logic
@@ -18,7 +21,7 @@ An AI-powered document chatbot that supports 75+ PDF/Image/Text files, extracts 
 - **Tesseract OCR** – for scanned document text extraction
 - **pdf2image** & **PyPDF2** – for handling PDF files (scanned + digital)
 - **LangChain (optional)** – for abstraction (not critical in this project)
-- **Render** – for deployment of full app
+- **Hugging Face** - Deployed on Hugging Face
 
 ## 📁 Project Structure
 📦 AiInternTask
